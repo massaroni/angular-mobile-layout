@@ -58,6 +58,18 @@ module.exports = function (grunt) {
         ]
       }
     },
+    clean: {
+      release: {
+        files: [
+          {
+            dot: true,
+            src: [
+              'release/*'
+            ]
+          }
+        ]
+      }
+    },
     jshint: {
       beforeConcat: {
         src: ['gruntfile.js', '<%= library.name %>/**/*.js']
@@ -102,9 +114,10 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-karma');
 
-  grunt.registerTask('default', ['jshint:beforeConcat', 'karma:unit', 'concat:library', 'jshint:afterConcat', 'copy', 'uglify']);
+  grunt.registerTask('default', ['clean:release', 'jshint:beforeConcat', 'karma:unit', 'concat:library', 'jshint:afterConcat', 'copy', 'uglify']);
   grunt.registerTask('livereload', ['default', 'watch']);
 
 };
