@@ -13,6 +13,7 @@ module.exports = function (config) {
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/**/*.js',
+      'test/phantomjs.function.bind.hackyfix.js',
       'src/**/*-module.js',
       'src/**/*.js',
       'test/unit/**/*.js'
