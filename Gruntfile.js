@@ -26,6 +26,7 @@ module.exports = function (grunt) {
         src: [
           'src/release.prefix',
           'src/release.suffix',
+          'src/utils/**/*.js',
           'src/<%= library.name %>/**/*-module.js',
           'src/<%= library.name %>/**/*.js'
         ],
