@@ -88,6 +88,12 @@ module.exports = function (grunt) {
       ],
       tasks: ['default']
     },
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js',
+        singleRun: true
+      }
+    }
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -95,8 +101,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-karma');
 
-  grunt.registerTask('default', ['jshint:beforeConcat', 'concat:library', 'jshint:afterConcat', 'copy', 'uglify']);
+  grunt.registerTask('default', ['jshint:beforeConcat', 'karma:unit', 'concat:library', 'jshint:afterConcat', 'copy', 'uglify']);
   grunt.registerTask('livereload', ['default', 'watch']);
 
 };
