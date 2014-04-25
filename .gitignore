@@ -7,6 +7,7 @@
 *.pid
 *.gz
 .idea/*
+*.iml
 *.DS_Store
 lib-cov
 pids
@@ -14,6 +15,7 @@ logs
 results
 
 node_modules
+bower_components
 
 #Actually, need to track these for site to run on Github Pages..
 #bower_components
