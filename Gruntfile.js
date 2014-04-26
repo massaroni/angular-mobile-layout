@@ -67,11 +67,6 @@ module.exports = function (grunt) {
           generatedImagesDir: 'release/images/generated'
         }
       }
-//      server: {
-//        options: {
-//          debugInfo: true
-//        }
-//      }
     },
 
     // Add vendor prefixed styles
