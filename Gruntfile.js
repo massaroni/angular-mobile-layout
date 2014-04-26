@@ -44,6 +44,61 @@ module.exports = function (grunt) {
         }
       }
     },
+
+    // Compiles Sass to CSS and generates necessary files if requested
+    compass: {
+      options: {
+        sassDir: 'src/<%= library.name %>/scss',
+        cssDir: '.tmp/css',
+        generatedImagesDir: '.tmp/images/generated',
+        imagesDir: 'src/<%= library.name %>/images',
+        javascriptsDir: 'src/<%= library.name %>/',
+        fontsDir: 'src/<%= library.name %>/fonts',
+        importPath: 'bower_components',
+        httpImagesPath: '/images',
+        httpGeneratedImagesPath: '/images/generated',
+        httpFontsPath: '/styles/fonts',
+        relativeAssets: false,
+        assetCacheBuster: false,
+        raw: 'Sass::Script::Number.precision = 10\n'
+      },
+      release: {
+        options: {
+          generatedImagesDir: 'release/images/generated'
+        }
+      }
+//      server: {
+//        options: {
+//          debugInfo: true
+//        }
+//      }
+    },
+
+    // Add vendor prefixed styles
+    autoprefixer: {
+      options: {
+        browsers: ['last 1 version']
+      },
+      dist: {
+        files: [
+          {
+            expand: true,
+            cwd: '.tmp/css/',
+            src: '**/*.css',
+            dest: '.tmp/css/'
+          }
+        ]
+      }
+    },
+
+    cssmin: {
+      combine: {
+        files: {
+          'release/<%= library.name %>.css': ['.tmp/css/**/*.css']
+        }
+      }
+    },
+
     copy: {
       main: {
         files: [
@@ -64,7 +119,7 @@ module.exports = function (grunt) {
           {
             dot: true,
             src: [
-              'release/*'
+              'release/*', '.tmp/*'
             ]
           }
         ]
@@ -112,12 +167,28 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-autoprefixer');
+  grunt.loadNpmTasks('grunt-contrib-compass');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-karma');
 
-  grunt.registerTask('default', ['clean:release', 'jshint:beforeConcat', 'karma:unit', 'concat:library', 'jshint:afterConcat', 'copy', 'uglify']);
+  grunt.registerTask('default',
+    ['clean:release',
+     'jshint:beforeConcat',
+     'karma:unit',
+
+      // css
+      'compass:release',
+      'autoprefixer',
+      'cssmin',
+
+      'concat:library',
+      'jshint:afterConcat',
+      'copy',
+      'uglify']);
   grunt.registerTask('livereload', ['default', 'watch']);
 
 };

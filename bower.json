@@ -6,7 +6,7 @@
   ],
   "description": "AngularJS directives for mobile layouts.",
   "private": false,
-  "main": "release/angular-mobile-layout.js",
+  "main": ["release/angular-mobile-layout.js", "release/angular-mobile-layout.css"],
   "keywords": [
     "angular",
     "AngularJS",
