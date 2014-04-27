@@ -12,12 +12,15 @@ See `bower.json` for a full list / more details.
 	1. Bower
 		1. add `"angular-mobile-layout": "latest"` to your `bower.json` file then run `bower install` OR run `bower install angular-mobile-layout`
 2. include the files in your app
-	1. `mobile-layout.min.js`
-	2. `mobile-layout.less` OR `mobile-layout.min.css` OR `mobile-layout.css`
-3. include the module in angular (i.e. in `app.js`) - `angular-mobile-layout`
+	1. `angular-mobile-layout.min.js` OR `angular-mobile-layout.js`
+	2. `angular-mobile-layout.min.css` OR `angular-mobile-layout.css`
+3. include the module in angular (i.e. in `app.js`) - `mobile.layout`
 
-See the `gh-pages` branch, files `bower.json` and `index.html` for a full example.
-
+    ex:
+>
+```javascript
+angular.module('myCordovaApp', ['mobile.layout'])
+```
 
 ## Documentation
 
