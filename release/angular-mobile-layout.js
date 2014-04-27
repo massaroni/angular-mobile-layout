@@ -190,7 +190,7 @@
   
     Preconditions.check(isGood, 'Illegal State: ', errorMsg, errorMsgArgs);
   };
-    // Source: src/angular-mobile-layout/js/widgets-module.js
+    // Source: src/angular-mobile-layout/js/mobile-layout-module.js
   angular.module('mobile.layout', [])
   
     .provider('JqLiteExtender', function JqLiteExtender() {

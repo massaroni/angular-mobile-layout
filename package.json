@@ -1,9 +1,9 @@
 {
 	"author": "Kevin Massaroni <kevinmassaroni@gmail.com>",
 	"name": "angular-mobile-layout",
-	"version": "0.0.1",
-	"description": "",
-	"homepage": "",
+	"version": "0.1.1",
+	"description": "AngularJS directives for mobile layouts.",
+	"homepage": "http://github.com/massaroni/angular-mobile-layout",
 	"dependencies": {
 	},
 	"devDependencies": {
