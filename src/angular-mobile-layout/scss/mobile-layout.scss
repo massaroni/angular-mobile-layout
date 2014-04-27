@@ -1,11 +1,11 @@
-div.vfl {
+.vfl {
   width: 100%;
   display: block;
   position: relative;
   overflow: hidden;
 }
 
-div.fill {
+.fill {
   display: block;
   position: relative;
   height: 100%;
@@ -15,10 +15,10 @@ div.fill {
   overflow: hidden;
 }
 
-div.vfl-container {
-  @extend div.fill;
+.vfl-container {
+  @extend .fill;
 
-  div.vfl-header {
+  .vfl-header {
     top: 0;
   }
 }
