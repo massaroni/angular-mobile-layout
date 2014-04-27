@@ -27,8 +27,8 @@ module.exports = function (grunt) {
           'src/release.prefix',
           'src/release.suffix',
           'src/utils/**/*.js',
-          'src/<%= library.name %>/**/*-module.js',
-          'src/<%= library.name %>/**/*.js'
+          'src/<%= library.name %>/js/**/*-module.js',
+          'src/<%= library.name %>/js/**/*.js'
         ],
         dest: 'release/<%= library.name %>.js'
       }
@@ -52,7 +52,7 @@ module.exports = function (grunt) {
         cssDir: '.tmp/css',
         generatedImagesDir: '.tmp/images/generated',
         imagesDir: 'src/<%= library.name %>/images',
-        javascriptsDir: 'src/<%= library.name %>/',
+        javascriptsDir: 'src/<%= library.name %>/js',
         fontsDir: 'src/<%= library.name %>/fonts',
         importPath: 'bower_components',
         httpImagesPath: '/images',
@@ -122,7 +122,7 @@ module.exports = function (grunt) {
     },
     jshint: {
       beforeConcat: {
-        src: ['gruntfile.js', '<%= library.name %>/**/*.js']
+        src: ['gruntfile.js', '<%= library.name %>/js/**/*.js']
       },
       afterConcat: {
         src: [
