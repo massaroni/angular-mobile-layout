@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('mass.widgets', [])
+angular.module('mobile.layout', [])
 
   .provider('JqLiteExtender', function JqLiteExtender() {
     var extender = this;

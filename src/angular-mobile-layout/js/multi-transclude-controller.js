@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('mass.widgets')
+angular.module('mobile.layout')
   .controller('multiTransclude', ['$scope', '$exceptionHandler', function ($scope, $exceptionHandler) {
     var transcludePostLinkers = [];
 

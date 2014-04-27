@@ -3,7 +3,7 @@
 describe('Provider: JqLiteExtender', function () {
 
   // load the service's module
-  beforeEach(module('mass.widgets'));
+  beforeEach(module('mobile.layout'));
 
   beforeEach(inject(function (JqLiteExtender){
     JqLiteExtender.extendPrototype();

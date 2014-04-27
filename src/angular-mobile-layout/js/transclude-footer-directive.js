@@ -4,7 +4,7 @@
  * This directive calls the multi-transclude post-linker, indicating the completion of all transcluded content's
  * post-linking, so you want your transclude-footer directive to be the last transcluded element.
  */
-angular.module('mass.widgets')
+angular.module('mobile.layout')
   .directive('transcludeFooter', [function TranscludeFooter() {
 
     return {

@@ -8,7 +8,7 @@
  * set the body height.  This version calculates its size after all its transcluded contents have completed their
  * post-linking, and it does not support dynamic resizing.
  */
-angular.module('mass.widgets')
+angular.module('mobile.layout')
   .directive('verticalFillLayout', [function VerticalFillLayout() {
 
     return {
