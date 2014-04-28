@@ -11,3 +11,22 @@ This is the initial release, and it only has the vertical-fill-layout-directive,
 ## Bug Fixes
 
 ## Breaking Changes
+
+
+# 0.1.1
+Making this module easier to import, with more flexible bower dependencies.
+
+## Features
+No new features.
+
+
+# 0.1.2
+
+## Features
+No new features.
+
+## Bug Fixes
+Added unit testing.
+Supporting more vertical-fill-layout use cases.
+No api changes.
+
