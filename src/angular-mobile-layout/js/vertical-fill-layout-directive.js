@@ -21,27 +21,6 @@ angular.module('mobile.layout')
        * This controller transcludes multiple divs.
        */
       controller: ['$scope', '$element', '$transclude', function ($scope, $element, $transclude) {
-        $transclude(function(clone) {
-          var headerContainer = $element.$find('div.vfl.vfl-header');
-          var bodyContainer = $element.$find('div.vfl.vfl-body');
-          var footerContainer = $element.$find('div.vfl.vfl-footer');
-
-          var headerContent = clone.$contents('*[transclude-header]');
-          var bodyContent = clone.$contents('*[transclude-body]');
-          var footerContent = clone.$contents('*[transclude-footer]');
-
-          Preconditions.checkArgument(headerContent.length === 1, 'Expected 1 transclude-header element, but found %s', headerContent.length);
-          Preconditions.checkArgument(bodyContent.length === 1, 'Expected 1 transclude-body element, but found %s', bodyContent.length);
-          Preconditions.checkArgument(footerContent.length === 1, 'Expected 1 transclude-footer element, but found %s', footerContent.length);
-
-          headerContainer.append(headerContent);
-          footerContainer.append(footerContent);
-          bodyContainer.append(bodyContent);
-        });
-      }],
-
-      link: function($scope, $element, $attr, $multiTranscludeCtrl) {
-        Preconditions.checkArgument(!!$multiTranscludeCtrl, 'Missing multi-transclude controller.');
         var multiTranscludeCtrl = $scope.multiTranscludeCtrl;
         Preconditions.checkArgument(!!multiTranscludeCtrl, 'Missing multi-transclude controller object.');
 
@@ -60,8 +39,26 @@ angular.module('mobile.layout')
           bodyContainer.style.height = bodyHeight.toString() + 'px';
         };
 
-        $scope.multiTranscludeCtrl.addTranscludePostLinker(resize);
-      }
+        multiTranscludeCtrl.addTranscludePostLinker(resize);
+
+        $transclude(function(clone) {
+          var headerContainer = $element.$find('div.vfl.vfl-header');
+          var bodyContainer = $element.$find('div.vfl.vfl-body');
+          var footerContainer = $element.$find('div.vfl.vfl-footer');
+
+          var headerContent = clone.$contents('*[transclude-header]');
+          var bodyContent = clone.$contents('*[transclude-body]');
+          var footerContent = clone.$contents('*[transclude-footer]');
+
+          Preconditions.checkArgument(headerContent.length === 1, 'Expected 1 transclude-header element, but found %s', headerContent.length);
+          Preconditions.checkArgument(bodyContent.length === 1, 'Expected 1 transclude-body element, but found %s', bodyContent.length);
+          Preconditions.checkArgument(footerContent.length === 1, 'Expected 1 transclude-footer element, but found %s', footerContent.length);
+
+          headerContainer.append(headerContent);
+          footerContainer.append(footerContent);
+          bodyContainer.append(bodyContent);
+        });
+      }]
 
     };
   }]);
