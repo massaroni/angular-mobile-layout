@@ -10,6 +10,7 @@ angular.module('mobile.layout')
     return {
       restrict: 'A',
       replace: false,
+      terminal: true,
 
       link: function($scope) {
         Preconditions.checkState(!!($scope.multiTranscludeCtrl), 'Missing required multi-transclude controller object.');
