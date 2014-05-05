@@ -169,6 +169,16 @@ angular.module('mobile.layout', [])
         return attrFiltered;
       };
 
+      angular.element.prototype.$children = function (selectorString) {
+        var children = this.children();
+
+        if (isEmptyJQL(children)) {
+          return children;
+        }
+
+        return children.$contents(selectorString);
+      };
+
     };
 
     this.$get = [function JqLiteExtenderFactory() {

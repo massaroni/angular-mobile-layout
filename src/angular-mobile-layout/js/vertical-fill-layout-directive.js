@@ -25,18 +25,25 @@ angular.module('mobile.layout')
         Preconditions.checkArgument(!!multiTranscludeCtrl, 'Missing multi-transclude controller object.');
 
         var resize = function () {
-          var rootContainer = $element.$contents('div.vfl.vfl-container')[0];
-          var headerContainer = $element.$find('div.vfl.vfl-header')[0];
-          var bodyContainer = $element.$find('div.vfl.vfl-body')[0];
-          var footerContainer = $element.$find('div.vfl.vfl-footer')[0];
+          var jqlContainer = $element.$contents('div.vfl.vfl-container');
+          var domContainer = jqlContainer[0];
 
-          var rootHeight = rootContainer.offsetHeight;
-          var headerHeight = headerContainer.offsetHeight;
-          var footerHeight = footerContainer.offsetHeight;
+          var jqlHeader = jqlContainer.$children('div.vfl.vfl-header');
+          var domHeader = jqlHeader[0];
+
+          var jqlBody = jqlContainer.$children('div.vfl.vfl-body');
+          var domBody = jqlBody[0];
+
+          var jqlFooter = jqlContainer.$children('div.vfl.vfl-footer');
+          var domFooter = jqlFooter[0];
+
+          var rootHeight = domContainer.offsetHeight;
+          var headerHeight = domHeader.offsetHeight;
+          var footerHeight = domFooter.offsetHeight;
 
           var bodyHeight = rootHeight - (headerHeight + footerHeight);
 
-          bodyContainer.style.height = bodyHeight.toString() + 'px';
+          domBody.style.height = bodyHeight.toString() + 'px';
         };
 
         multiTranscludeCtrl.addTranscludePostLinker(resize);
