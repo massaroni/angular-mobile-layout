@@ -26,6 +26,37 @@ describe('Provider: JqLiteExtender', function () {
     expect(filtered[1].localName).toBe('foo');
   });
 
+  it('should support $children() access, with selectors', function () {
+    var jqlElement = angular.element('<top><mid><bottom></bottom></mid></top><side><side-mid></side-mid></side>');
+
+    var allChildren = jqlElement.children();
+    expect(allChildren.length).toBe(2);
+    expect(allChildren[0].localName).toBe('mid');
+    expect(allChildren[1].localName).toBe('side-mid');
+
+    var filteredChildren = jqlElement.$children('mid');
+    expect(filteredChildren.length).toBe(1);
+    expect(filteredChildren[0].localName).toBe('mid');
+  });
+
+  it('should support access to nested $children(), without requiring you to instantiate another angular.element()', function () {
+    var jqlElement = angular.element('<top><mid><bottom></bottom></mid></top><side><side-mid></side-mid></side>');
+
+    var mid = jqlElement.$children('mid');
+    var bottom = mid.$children('bottom');
+
+    expect(mid[0].localName).toBe('mid');
+    expect(bottom[0].localName).toBe('bottom');
+  });
+
+  it('$children() should only search 1 level deep', function () {
+    var jqlElement = angular.element('<top><mid><mid><mid></mid></mid></mid></top>');
+
+    var mid = jqlElement.$children('mid');
+    expect(mid.length).toBe(1);
+    expect(mid[0].localName).toBe('mid');
+  });
+
   it('should filter contents by attribute marker', function () {
     var jql = angular.element('<div not-marker> </div> <foo marker></foo> ');
     var filtered = jql.$contents('*[marker]');
