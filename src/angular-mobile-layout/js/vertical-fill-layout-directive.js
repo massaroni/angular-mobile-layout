@@ -28,13 +28,15 @@ angular.module('mobile.layout')
           var jqlContainer = $element.$contents('div.vfl.vfl-container');
           var domContainer = jqlContainer[0];
 
-          var jqlHeader = jqlContainer.$children('div.vfl.vfl-header');
+          var mountPoints = jqlContainer.children();
+
+          var jqlHeader = mountPoints.$contents('div.vfl.vfl-header');
           var domHeader = jqlHeader[0];
 
-          var jqlBody = jqlContainer.$children('div.vfl.vfl-body');
+          var jqlBody = mountPoints.$contents('div.vfl.vfl-body');
           var domBody = jqlBody[0];
 
-          var jqlFooter = jqlContainer.$children('div.vfl.vfl-footer');
+          var jqlFooter = mountPoints.$contents('div.vfl.vfl-footer');
           var domFooter = jqlFooter[0];
 
           var rootHeight = domContainer.offsetHeight;
