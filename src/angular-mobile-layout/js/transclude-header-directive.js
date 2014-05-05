@@ -5,7 +5,7 @@
  * controller will set the body div size, when both the header and footer are done post-linking.
  */
 angular.module('mobile.layout')
-  .directive('transcludeFooter', [function TranscludeFooter() {
+  .directive('transcludeHeader', [function TranscludeHeader() {
 
     return {
       restrict: 'A',
