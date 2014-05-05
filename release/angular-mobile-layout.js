@@ -360,6 +360,16 @@
           return attrFiltered;
         };
   
+        angular.element.prototype.$children = function (selectorString) {
+          var children = this.children();
+  
+          if (isEmptyJQL(children)) {
+            return children;
+          }
+  
+          return children.$contents(selectorString);
+        };
+  
       };
   
       this.$get = [function JqLiteExtenderFactory() {
@@ -374,6 +384,19 @@
   angular.module('mobile.layout')
     .controller('multiTransclude', ['$scope', '$exceptionHandler', function ($scope, $exceptionHandler) {
       var transcludePostLinkers = [];
+      var completedPostLinks = 0;
+  
+      var doPostLinking = function () {
+        for (var i = 0; i < transcludePostLinkers.length; i++) {
+          var postlinker = transcludePostLinkers[i];
+  
+          try {
+            postlinker();
+          } catch (e) {
+            $exceptionHandler(e);
+          }
+        }
+      };
   
       $scope.multiTranscludeCtrl = {
         addTranscludePostLinker: function (callback) {
@@ -381,18 +404,12 @@
           transcludePostLinkers.push(callback);
         },
   
-        doTranscludePostLink: function () {
+        transcludePostLinkComplete: function () {
+          completedPostLinks++;
   
-          for (var i = 0; i < transcludePostLinkers.length; i++) {
-            var postlinker = transcludePostLinkers[i];
-  
-            try {
-              postlinker();
-            } catch (e) {
-              $exceptionHandler(e);
-            }
+          if (completedPostLinks >= transcludePostLinkers.length * 2) {
+            doPostLinking();
           }
-  
         }
       };
   
@@ -400,8 +417,8 @@
   ;
     // Source: src/angular-mobile-layout/js/transclude-footer-directive.js
   /**
-   * This directive calls the multi-transclude post-linker, indicating the completion of all transcluded content's
-   * post-linking, so you want your transclude-footer directive to be the last transcluded element.
+   * This directive notifies the multi-transclude controller that it's done post-linking. The multi-transclude
+   * controller will set the body div size, when both the header and footer are done post-linking.
    */
   angular.module('mobile.layout')
     .directive('transcludeFooter', [function TranscludeFooter() {
@@ -413,7 +430,27 @@
   
         link: function($scope) {
           Preconditions.checkState(!!($scope.multiTranscludeCtrl), 'Missing required multi-transclude controller object.');
-          $scope.multiTranscludeCtrl.doTranscludePostLink();
+          $scope.multiTranscludeCtrl.transcludePostLinkComplete();
+        }
+  
+      };
+    }]);
+    // Source: src/angular-mobile-layout/js/transclude-header-directive.js
+  /**
+   * This directive notifies the multi-transclude controller that it's done post-linking. The multi-transclude
+   * controller will set the body div size, when both the header and footer are done post-linking.
+   */
+  angular.module('mobile.layout')
+    .directive('transcludeHeader', [function TranscludeHeader() {
+  
+      return {
+        restrict: 'A',
+        replace: false,
+        terminal: true,
+  
+        link: function($scope) {
+          Preconditions.checkState(!!($scope.multiTranscludeCtrl), 'Missing required multi-transclude controller object.');
+          $scope.multiTranscludeCtrl.transcludePostLinkComplete();
         }
   
       };
@@ -444,18 +481,27 @@
           Preconditions.checkArgument(!!multiTranscludeCtrl, 'Missing multi-transclude controller object.');
   
           var resize = function () {
-            var rootContainer = $element.$contents('div.vfl.vfl-container')[0];
-            var headerContainer = $element.$find('div.vfl.vfl-header')[0];
-            var bodyContainer = $element.$find('div.vfl.vfl-body')[0];
-            var footerContainer = $element.$find('div.vfl.vfl-footer')[0];
+            var jqlContainer = $element.$contents('div.vfl.vfl-container');
+            var domContainer = jqlContainer[0];
   
-            var rootHeight = rootContainer.offsetHeight;
-            var headerHeight = headerContainer.offsetHeight;
-            var footerHeight = footerContainer.offsetHeight;
+            var mountPoints = jqlContainer.children();
+  
+            var jqlHeader = mountPoints.$contents('div.vfl.vfl-header');
+            var domHeader = jqlHeader[0];
+  
+            var jqlBody = mountPoints.$contents('div.vfl.vfl-body');
+            var domBody = jqlBody[0];
+  
+            var jqlFooter = mountPoints.$contents('div.vfl.vfl-footer');
+            var domFooter = jqlFooter[0];
+  
+            var rootHeight = domContainer.offsetHeight;
+            var headerHeight = domHeader.offsetHeight;
+            var footerHeight = domFooter.offsetHeight;
   
             var bodyHeight = rootHeight - (headerHeight + footerHeight);
   
-            bodyContainer.style.height = bodyHeight.toString() + 'px';
+            domBody.style.height = bodyHeight.toString() + 'px';
           };
   
           multiTranscludeCtrl.addTranscludePostLinker(resize);

@@ -30,3 +30,7 @@ Added unit testing.
 Supporting more vertical-fill-layout use cases.
 No api changes.
 
+# 0.2.0
+
+## Features
+Now you can nest a <vertical-fill-layout> directive inside the transcluded body of another <vertical-fill-layout>, under the same multi-transclude controller.
