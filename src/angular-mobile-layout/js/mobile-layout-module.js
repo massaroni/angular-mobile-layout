@@ -25,21 +25,44 @@ angular.module('mobile.layout', [])
         return new angular.element(matches);
       };
 
-      var parseTagSelector = function (tagSelector) {
-        var selectors = tagSelector.split('[');
+      var attributeSelectorPattern = /\[([\w\-])*\]/g;
+      var tagNamePattern = /([\w\-]|\*)+/g;
 
-        if (selectors.length === 1) {
-          return {tag: selectors[0]};
+      /**
+       * Get the attribute name out of the [wrapped] attribute selector string.
+       *
+       * @param selector
+       * @returns {string}
+       */
+      var unwrapAttributeSelector = function (selector) {
+        Preconditions.checkArgument(selector.length > 2, 'Invalid attribute selector: %s', selector);
+        return selector.substring(1, selector.length - 1);
+      };
+
+      var parseTagSelector = function (tagSelector) {
+        var tagName;
+
+        if (tagSelector.charAt(0) === '[') {
+          tagName = '*';
+        } else {
+          var words = tagSelector.match(tagNamePattern);
+          if (!!words) {
+            tagName = words[0];
+          } else {
+            tagName = '*';
+          }
         }
 
-        Preconditions.checkArgument(selectors.length === 2, 'Expected 1 attr and 1 tag selector, but was: %s', selectors);
+        var selectors = tagSelector.match(attributeSelectorPattern);
 
-        var attributeSelector = selectors[1];
-        Preconditions.checkArgument(attributeSelector[attributeSelector.length - 1] === ']', 'Malformed attribute selector.');
+        var attributeSelector;
 
-        var cleanAttrSelector = attributeSelector.substring(0, attributeSelector.length - 1);
+        if (!!selectors) {
+          Preconditions.checkArgument(selectors.length === 1, 'At most 1 attribute selector supported, but found %s selectors in %s', selectors.length, tagSelector);
+          attributeSelector = unwrapAttributeSelector(selectors[0]);
+        }
 
-        return {tag: selectors[0], attr: cleanAttrSelector};
+        return {tag: tagName, attr: attributeSelector};
       };
 
       var isEmptyJQL = function (jql) {
@@ -53,10 +76,16 @@ angular.module('mobile.layout', [])
       var Selector = function Selector(selector) {
         Preconditions.checkArgument(Js.isString(selector), 'Not a selector: %s', selector);
 
-        var selectors = selector.split('.');
+        var clean = selector.trim();
+        var selectors = clean.split('.');
         Preconditions.checkArgument(selectors.length >= 1, 'Invalid selector: %s', selector);
 
         var tagName = selectors.shift();
+
+        if (Js.isEmptyString(tagName)) {
+          tagName = '*';
+        }
+
         this.tagSelector = parseTagSelector(tagName);
         this.classNames = selectors;
       };
