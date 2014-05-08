@@ -11,6 +11,17 @@
 angular.module('mobile.layout')
   .directive('verticalFillLayout', [function VerticalFillLayout() {
 
+    var getJQLMountPoints = function (element) {
+      var jqlContainer = element.$contents('div.vfl.vfl-container');
+      var mountPoints = jqlContainer.children();
+
+      var jqlHeader = mountPoints.$contents('div.vfl.vfl-header');
+      var jqlBody = mountPoints.$contents('div.vfl.vfl-body');
+      var jqlFooter = mountPoints.$contents('div.vfl.vfl-footer');
+
+      return {container: jqlContainer, header: jqlHeader, body: jqlBody, footer: jqlFooter};
+    };
+
     return {
       template: '<div class="vfl vfl-container"><div class="vfl vfl-header"></div><div class="vfl vfl-body"></div><div class="vfl vfl-footer"></div></div>',
       restrict: 'E',
@@ -25,19 +36,11 @@ angular.module('mobile.layout')
         Preconditions.checkArgument(!!multiTranscludeCtrl, 'Missing multi-transclude controller object.');
 
         var resize = function () {
-          var jqlContainer = $element.$contents('div.vfl.vfl-container');
-          var domContainer = jqlContainer[0];
-
-          var mountPoints = jqlContainer.children();
-
-          var jqlHeader = mountPoints.$contents('div.vfl.vfl-header');
-          var domHeader = jqlHeader[0];
-
-          var jqlBody = mountPoints.$contents('div.vfl.vfl-body');
-          var domBody = jqlBody[0];
-
-          var jqlFooter = mountPoints.$contents('div.vfl.vfl-footer');
-          var domFooter = jqlFooter[0];
+          var mountPoints = getJQLMountPoints($element);
+          var domContainer = mountPoints.container[0];
+          var domHeader = mountPoints.header[0];
+          var domBody = mountPoints.body[0];
+          var domFooter = mountPoints.footer[0];
 
           var rootHeight = domContainer.offsetHeight;
           var headerHeight = domHeader.offsetHeight;
@@ -50,10 +53,12 @@ angular.module('mobile.layout')
 
         multiTranscludeCtrl.addTranscludePostLinker(resize);
 
-        $transclude(function(clone) {
-          var headerContainer = $element.$find('div.vfl.vfl-header');
-          var bodyContainer = $element.$find('div.vfl.vfl-body');
-          var footerContainer = $element.$find('div.vfl.vfl-footer');
+        $transclude(function (clone) {
+          var mountPoints = getJQLMountPoints($element);
+
+          var headerContainer = mountPoints.header;
+          var bodyContainer = mountPoints.body;
+          var footerContainer = mountPoints.footer;
 
           var headerContent = clone.$contents('*[transclude-header]');
           var bodyContent = clone.$contents('*[transclude-body]');
