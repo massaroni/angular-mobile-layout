@@ -6,7 +6,7 @@ until I can try this out in my other project from which this code was transplant
 or until I build a sample/ directory with examples.
 
 ## Features
-This is the initial release, and it only has the vertical-fill-layout-directive, as the centerpiece feature.
+This is the initial release, and it only has the `<vertical-fill-layout>` directive, as the centerpiece feature.
 
 ## Bug Fixes
 
@@ -33,4 +33,4 @@ No api changes.
 # 0.2.0
 
 ## Features
-Now you can nest a <vertical-fill-layout> directive inside the transcluded body of another <vertical-fill-layout>, under the same multi-transclude controller.
+Now you can nest a `<vertical-fill-layout>` directive inside the transcluded body of another `<vertical-fill-layout>`, under the same multi-transclude controller.
