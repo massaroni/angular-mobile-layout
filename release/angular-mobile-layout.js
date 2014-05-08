@@ -216,21 +216,44 @@
           return new angular.element(matches);
         };
   
-        var parseTagSelector = function (tagSelector) {
-          var selectors = tagSelector.split('[');
+        var attributeSelectorPattern = /\[([\w\-])*\]/g;
+        var tagNamePattern = /([\w\-]|\*)+/g;
   
-          if (selectors.length === 1) {
-            return {tag: selectors[0]};
+        /**
+         * Get the attribute name out of the [wrapped] attribute selector string.
+         *
+         * @param selector
+         * @returns {string}
+         */
+        var unwrapAttributeSelector = function (selector) {
+          Preconditions.checkArgument(selector.length > 2, 'Invalid attribute selector: %s', selector);
+          return selector.substring(1, selector.length - 1);
+        };
+  
+        var parseTagSelector = function (tagSelector) {
+          var tagName;
+  
+          if (tagSelector.charAt(0) === '[') {
+            tagName = '*';
+          } else {
+            var words = tagSelector.match(tagNamePattern);
+            if (!!words) {
+              tagName = words[0];
+            } else {
+              tagName = '*';
+            }
           }
   
-          Preconditions.checkArgument(selectors.length === 2, 'Expected 1 attr and 1 tag selector, but was: %s', selectors);
+          var selectors = tagSelector.match(attributeSelectorPattern);
   
-          var attributeSelector = selectors[1];
-          Preconditions.checkArgument(attributeSelector[attributeSelector.length - 1] === ']', 'Malformed attribute selector.');
+          var attributeSelector;
   
-          var cleanAttrSelector = attributeSelector.substring(0, attributeSelector.length - 1);
+          if (!!selectors) {
+            Preconditions.checkArgument(selectors.length === 1, 'At most 1 attribute selector supported, but found %s selectors in %s', selectors.length, tagSelector);
+            attributeSelector = unwrapAttributeSelector(selectors[0]);
+          }
   
-          return {tag: selectors[0], attr: cleanAttrSelector};
+          return {tag: tagName, attr: attributeSelector};
         };
   
         var isEmptyJQL = function (jql) {
@@ -244,10 +267,16 @@
         var Selector = function Selector(selector) {
           Preconditions.checkArgument(Js.isString(selector), 'Not a selector: %s', selector);
   
-          var selectors = selector.split('.');
+          var clean = selector.trim();
+          var selectors = clean.split('.');
           Preconditions.checkArgument(selectors.length >= 1, 'Invalid selector: %s', selector);
   
           var tagName = selectors.shift();
+  
+          if (Js.isEmptyString(tagName)) {
+            tagName = '*';
+          }
+  
           this.tagSelector = parseTagSelector(tagName);
           this.classNames = selectors;
         };
@@ -419,6 +448,11 @@
   /**
    * This directive notifies the multi-transclude controller that it's done post-linking. The multi-transclude
    * controller will set the body div size, when both the header and footer are done post-linking.
+   *
+   * This directive has a really low priority (high priority number), so that it's the last directive angular links.
+   * This directive can get bolted onto an element that already has its own directive, and transclude-footer must be
+   * the last directive angular links. The original directive's linker should compile the footer height that this
+   * directive needs, to derive the fixed body height.
    */
   angular.module('mobile.layout')
     .directive('transcludeFooter', [function TranscludeFooter() {
@@ -426,7 +460,8 @@
       return {
         restrict: 'A',
         replace: false,
-        terminal: true,
+        terminal: false,
+        priority: 10000,
   
         link: function($scope) {
           Preconditions.checkState(!!($scope.multiTranscludeCtrl), 'Missing required multi-transclude controller object.');
@@ -446,7 +481,8 @@
       return {
         restrict: 'A',
         replace: false,
-        terminal: true,
+        terminal: false,
+        priority: 10000,
   
         link: function($scope) {
           Preconditions.checkState(!!($scope.multiTranscludeCtrl), 'Missing required multi-transclude controller object.');
@@ -467,6 +503,17 @@
   angular.module('mobile.layout')
     .directive('verticalFillLayout', [function VerticalFillLayout() {
   
+      var getJQLMountPoints = function (element) {
+        var jqlContainer = element.$contents('div.vfl.vfl-container');
+        var mountPoints = jqlContainer.children();
+  
+        var jqlHeader = mountPoints.$contents('div.vfl.vfl-header');
+        var jqlBody = mountPoints.$contents('div.vfl.vfl-body');
+        var jqlFooter = mountPoints.$contents('div.vfl.vfl-footer');
+  
+        return {container: jqlContainer, header: jqlHeader, body: jqlBody, footer: jqlFooter};
+      };
+  
       return {
         template: '<div class="vfl vfl-container"><div class="vfl vfl-header"></div><div class="vfl vfl-body"></div><div class="vfl vfl-footer"></div></div>',
         restrict: 'E',
@@ -481,19 +528,11 @@
           Preconditions.checkArgument(!!multiTranscludeCtrl, 'Missing multi-transclude controller object.');
   
           var resize = function () {
-            var jqlContainer = $element.$contents('div.vfl.vfl-container');
-            var domContainer = jqlContainer[0];
-  
-            var mountPoints = jqlContainer.children();
-  
-            var jqlHeader = mountPoints.$contents('div.vfl.vfl-header');
-            var domHeader = jqlHeader[0];
-  
-            var jqlBody = mountPoints.$contents('div.vfl.vfl-body');
-            var domBody = jqlBody[0];
-  
-            var jqlFooter = mountPoints.$contents('div.vfl.vfl-footer');
-            var domFooter = jqlFooter[0];
+            var mountPoints = getJQLMountPoints($element);
+            var domContainer = mountPoints.container[0];
+            var domHeader = mountPoints.header[0];
+            var domBody = mountPoints.body[0];
+            var domFooter = mountPoints.footer[0];
   
             var rootHeight = domContainer.offsetHeight;
             var headerHeight = domHeader.offsetHeight;
@@ -506,10 +545,12 @@
   
           multiTranscludeCtrl.addTranscludePostLinker(resize);
   
-          $transclude(function(clone) {
-            var headerContainer = $element.$find('div.vfl.vfl-header');
-            var bodyContainer = $element.$find('div.vfl.vfl-body');
-            var footerContainer = $element.$find('div.vfl.vfl-footer');
+          $transclude(function (clone) {
+            var mountPoints = getJQLMountPoints($element);
+  
+            var headerContainer = mountPoints.header;
+            var bodyContainer = mountPoints.body;
+            var footerContainer = mountPoints.footer;
   
             var headerContent = clone.$contents('*[transclude-header]');
             var bodyContent = clone.$contents('*[transclude-body]');

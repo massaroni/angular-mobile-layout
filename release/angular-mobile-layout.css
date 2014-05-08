@@ -1,1 +1,23 @@
-.vfl{width:100%;display:block;position:relative;overflow:hidden}.fill,.vfl-container{display:block;position:relative;height:100%;width:100%;top:0;bottom:0;overflow:hidden}.vfl-container .vfl-header{top:0}
+/* line 1, ../../src/angular-mobile-layout/scss/mobile-layout.scss */
+.vfl {
+  width: 100%;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+/* line 8, ../../src/angular-mobile-layout/scss/mobile-layout.scss */
+.fill, .vfl-container {
+  display: block;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+/* line 21, ../../src/angular-mobile-layout/scss/mobile-layout.scss */
+.vfl-container .vfl-header {
+  top: 0;
+}

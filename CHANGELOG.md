@@ -34,3 +34,9 @@ No api changes.
 
 ## Features
 Now you can nest a `<vertical-fill-layout>` directive inside the transcluded body of another `<vertical-fill-layout>`, under the same multi-transclude controller.
+
+# 0.3.0
+
+## Features
+Better support for transcluding complex angular directives in the header and footer of a `<vertical-fill-layout>`.
+
