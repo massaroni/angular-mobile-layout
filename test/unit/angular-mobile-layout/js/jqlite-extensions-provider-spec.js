@@ -65,6 +65,14 @@ describe('Provider: JqLiteExtender', function () {
     expect(filtered[0].localName).toBe('foo');
   });
 
+  it('should find $contents by attribute marker without a tag name', function () {
+    var jql = angular.element('<div not-marker> </div> <foo marker></foo> ');
+    var filtered = jql.$contents('[marker]');
+
+    expect(filtered.length).toBe(1);
+    expect(filtered[0].localName).toBe('foo');
+  });
+
   it('should find deep nodes by attribute marker', function () {
     var jql = angular.element('<div><div not-marker></div><foo marker></foo></div>');
     var filtered = jql.$find('*[marker]');
@@ -72,4 +80,26 @@ describe('Provider: JqLiteExtender', function () {
     expect(filtered.length).toBe(1);
     expect(filtered[0].localName).toBe('foo');
   });
+
+  it('should $find deep nodes by attribute marker without a tag name', function () {
+    var jql = angular.element('<div><div not-marker></div><foo marker></foo></div>');
+    var filtered = jql.$find('[marker]');
+
+    expect(filtered.length).toBe(1);
+    expect(filtered[0].localName).toBe('foo');
+  });
+
+  it('should find deep nodes by attribute marker', function () {
+    var jql = angular.element('<div class="tiger lion"><div class="lion" not-marker></div><foo class="tiger" marker></foo></div>');
+    var tigers = jql.$find('.tiger');
+
+    expect(tigers.length).toBe(1);
+    expect(tigers[0].localName).toBe('foo');
+
+    var lions = jql.$find('.lion');
+
+    expect(lions.length).toBe(1);
+    expect(lions[0].localName).toBe('div');
+  });
+
 });

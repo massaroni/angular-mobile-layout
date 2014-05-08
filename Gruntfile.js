@@ -31,6 +31,10 @@ module.exports = function (grunt) {
           'src/<%= library.name %>/js/**/*.js'
         ],
         dest: 'release/<%= library.name %>.js'
+      },
+      libraryCss: {
+        src: ['.tmp/**/*.css'],
+        dest: 'release/<%= library.name %>.css'
       }
     },
     uglify: {
@@ -89,7 +93,7 @@ module.exports = function (grunt) {
     cssmin: {
       combine: {
         files: {
-          'release/<%= library.name %>.css': ['.tmp/css/**/*.css']
+          'release/<%= library.name %>.min.css': ['.tmp/css/**/*.css']
         }
       }
     },
@@ -178,6 +182,7 @@ module.exports = function (grunt) {
       // css
       'compass:release',
       'autoprefixer',
+      'concat:libraryCss',
       'cssmin',
 
       'concat:library',
