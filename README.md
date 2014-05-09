@@ -1,6 +1,6 @@
 # AngularJS directives for mobile layouts.
 
-Make a mobile layout with a header/body/footer template, with just one directive: ```<vertical-fill-layout>``` arranges
+Make a mobile layout with a header/body/footer template, with just one directive. The ```<vertical-fill-layout>``` directive positions
 3 transcluded elements into a header/body/footer template, so that the height of the body consumes all available space
 between the header and footer, on any screen size.  It's all done in simple javascript, so that it's backward
 compatible with old iPhones and Androids, and it fits all screen sizes without any extra configuration. The body height
