@@ -1,8 +1,11 @@
 # AngularJS directives for mobile layouts.
 
-This is a library of angularjs directives useful in mobile websites, and phonegap or cordova apps. There's a strong
-focus on providing an api encapsulated in directives, and this library emerged to complement the ionic framework, but
-it has no ionic dependency.
+Make a mobile layout with a header/body/footer template, with just one directive: ```<vertical-fill-layout>``` arranges
+3 transcluded elements into a header/body/footer template, so that the height of the body consumes all available space
+between the header and footer, on any screen size.  It's all done in simple javascript, so that it's backward
+compatible with old iPhones and Androids, and it fits all screen sizes without any extra configuration. The body height
+is fixed, making it a great container for a scrollable ```<ion-content>``` ([Ionic Framework](http://ionicframework.com/docs/api/directive/ionContent/))
+or an ```ng-iscroll``` div ([ng-iScroll](https://github.com/ibspoof/ng-iScroll)).
 
 ## Dependencies
 See `bower.json` for a full list / more details.
@@ -52,7 +55,7 @@ https://github.com/massaroni/angular-mobile-layout/blob/master/release/angular-m
 
 Requirements:
 
-**(1)** Transclude 3 html elements.  They can be primitive html or your own angular directives. They must be siblings,
+**(1)** Transclude 3 elements.  They can be primitive html or your own angular directives. They must be siblings,
 nested directly under the <vertical-fill-layout> tag. Do not encapsulate them within a div of their own.
 
 **(2)** Annotate your header element with the **transclude-header** attribute.
@@ -67,7 +70,7 @@ Here's an example of a directive's template that uses vertical-fill-layout:
 
 >
 ```html
-<div>
+<div class="my-example-directive">
     <div class="fill" ng-controller="multiTransclude">
         <vertical-fill-layout>
             <div transclude-header>
