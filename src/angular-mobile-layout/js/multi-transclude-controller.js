@@ -29,6 +29,10 @@ angular.module('mobile.layout')
         if (completedPostLinks >= transcludePostLinkers.length * 2) {
           doPostLinking();
         }
+      },
+      
+      notifyOfExistence: function() {
+        transcludeElements++;
       }
     };
 
