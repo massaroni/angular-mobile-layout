@@ -36,19 +36,23 @@ angular.module('mobile.layout')
         Preconditions.checkArgument(!!multiTranscludeCtrl, 'Missing multi-transclude controller object.');
 
         var resize = function () {
-          var mountPoints = getJQLMountPoints($element);
-          var domContainer = mountPoints.container[0];
-          var domHeader = mountPoints.header[0];
-          var domBody = mountPoints.body[0];
-          var domFooter = mountPoints.footer[0];
+            var mountPoints = getJQLMountPoints($element);
+            var domBody = mountPoints.body[0];
+            var rootHeight = 0, headerHeight = 0, footerHeight = 0;
 
-          var rootHeight = domContainer.offsetHeight;
-          var headerHeight = domHeader.offsetHeight;
-          var footerHeight = domFooter.offsetHeight;
+            try {
+              rootHeight = mountPoints.container[0].offsetHeight;
+            } catch (e) {}
+            try {
+              headerHeight = mountPoints.header[0].offsetHeight;
+            } catch (e) {}
+            try {
+              footerHeight = mountPoints.footer[0].offsetHeight;
+            } catch (e) {}
 
-          var bodyHeight = rootHeight - (headerHeight + footerHeight);
-
-          domBody.style.height = bodyHeight.toString() + 'px';
+            var bodyHeight = rootHeight - (headerHeight + footerHeight);
+  
+            domBody.style.height = bodyHeight.toString() + 'px';
         };
 
         multiTranscludeCtrl.addTranscludePostLinker(resize);
@@ -64,13 +68,17 @@ angular.module('mobile.layout')
           var bodyContent = clone.$contents('*[transclude-body]');
           var footerContent = clone.$contents('*[transclude-footer]');
 
-          Preconditions.checkArgument(headerContent.length === 1, 'Expected 1 transclude-header element, but found %s', headerContent.length);
-          Preconditions.checkArgument(bodyContent.length === 1, 'Expected 1 transclude-body element, but found %s', bodyContent.length);
-          Preconditions.checkArgument(footerContent.length === 1, 'Expected 1 transclude-footer element, but found %s', footerContent.length);
-
-          headerContainer.append(headerContent);
-          footerContainer.append(footerContent);
-          bodyContainer.append(bodyContent);
+          if(Js.isSomething(headerContent[0])) {
+            headerContainer.append(headerContent);
+            multiTranscludeCtrl.notifyOfExistence();
+          }
+          if(Js.isSomething(footerContent[0])) {
+            footerContainer.append(footerContent);
+            multiTranscludeCtrl.notifyOfExistence();
+          }
+          if(Js.isSomething(bodyContent[0])) {
+            bodyContainer.append(bodyContent);
+          }
         });
       }]
 
