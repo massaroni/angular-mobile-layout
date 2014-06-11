@@ -3,7 +3,7 @@
 angular.module('mobile.layout')
   .controller('multiTransclude', ['$scope', '$exceptionHandler', function ($scope, $exceptionHandler) {
     var transcludePostLinkers = [];
-    var completedPostLinks = 0;
+    var completedPostLinks = 0, transcludeElements = 0;
 
     var doPostLinking = function () {
       for (var i = 0; i < transcludePostLinkers.length; i++) {
@@ -26,7 +26,7 @@ angular.module('mobile.layout')
       transcludePostLinkComplete: function () {
         completedPostLinks++;
 
-        if (completedPostLinks >= transcludePostLinkers.length * 2) {
+        if (completedPostLinks >= transcludeElements) {
           doPostLinking();
         }
       },
