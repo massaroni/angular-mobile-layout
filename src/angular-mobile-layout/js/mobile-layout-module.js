@@ -128,9 +128,13 @@ angular.module('mobile.layout', [])
               classList = node.className.split(' ');
           }
 
+          var requiredPredicate = function(val) {
+              return (requiredClasses.indexOf(val) !== -1);
+          };
+
           for (var i = 0; i < requiredClasses.length; i++) {
             if (classList.contains && !classList.contains(requiredClasses[i]) ||
-                classList.some && !classList.some(requiredClasses[i])) {
+                classList.some && !classList.some(requiredPredicate)) {
               return false;
             }
           }
