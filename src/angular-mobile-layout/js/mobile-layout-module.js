@@ -125,7 +125,7 @@ angular.module('mobile.layout', [])
           var classList = node.classList;
 
           if(!classList) {
-              classList = classNames.split(' ');
+              classList = node.className.split(' ');
           }
 
           for (var i = 0; i < requiredClasses.length; i++) {
