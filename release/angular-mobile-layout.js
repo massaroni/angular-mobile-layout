@@ -315,8 +315,13 @@
           var hasClasses = function (node) {
             var classList = node.classList;
   
+            if(!classList) {
+                classList = classNames.split(' ');
+            }
+  
             for (var i = 0; i < requiredClasses.length; i++) {
-              if (!(classList.contains(requiredClasses[i]))) {
+              if (classList.contains && !classList.contains(requiredClasses[i]) ||
+                  classList.some && !classList.some(requiredClasses[i])) {
                 return false;
               }
             }
