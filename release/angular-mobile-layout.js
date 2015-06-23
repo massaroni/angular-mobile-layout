@@ -514,7 +514,7 @@
    * post-linking, and it does not support dynamic resizing.
    */
   angular.module('mobile.layout')
-    .directive('verticalFillLayout', [function VerticalFillLayout() {
+    .directive('verticalFillLayout', ['$timeout', function VerticalFillLayout($timeout) {
   
       var getJQLMountPoints = function (element) {
         var jqlContainer = element.$contents('div.vfl.vfl-container');
@@ -541,23 +541,18 @@
           Preconditions.checkArgument(!!multiTranscludeCtrl, 'Missing multi-transclude controller object.');
   
           var resize = function () {
+            $timeout(function () {
               var mountPoints = getJQLMountPoints($element);
               var domBody = mountPoints.body[0];
-              var rootHeight = 0, headerHeight = 0, footerHeight = 0;
   
-              try {
-                rootHeight = mountPoints.container[0].offsetHeight;
-              } catch (e) {}
-              try {
-                headerHeight = mountPoints.header[0].offsetHeight;
-              } catch (e) {}
-              try {
-                footerHeight = mountPoints.footer[0].offsetHeight;
-              } catch (e) {}
+              var rootHeight = mountPoints.container.length > 0 ? mountPoints.container[0].offsetHeight : 0;
+              var headerHeight = mountPoints.header.length > 0 ? mountPoints.header[0].offsetHeight : 0;
+              var footerHeight = mountPoints.footer.length > 0 ? mountPoints.footer[0].offsetHeight : 0;
   
               var bodyHeight = rootHeight - (headerHeight + footerHeight);
-    
+  
               domBody.style.height = bodyHeight.toString() + 'px';
+            }, 0);
           };
   
           multiTranscludeCtrl.addTranscludePostLinker(resize);
@@ -573,15 +568,15 @@
             var bodyContent = clone.$contents('*[transclude-body]');
             var footerContent = clone.$contents('*[transclude-footer]');
   
-            if(Js.isSomething(headerContent[0])) {
+            if (Js.isSomething(headerContent[0])) {
               headerContainer.append(headerContent);
               multiTranscludeCtrl.notifyOfExistence();
             }
-            if(Js.isSomething(footerContent[0])) {
+            if (Js.isSomething(footerContent[0])) {
               footerContainer.append(footerContent);
               multiTranscludeCtrl.notifyOfExistence();
             }
-            if(Js.isSomething(bodyContent[0])) {
+            if (Js.isSomething(bodyContent[0])) {
               bodyContainer.append(bodyContent);
             }
           });

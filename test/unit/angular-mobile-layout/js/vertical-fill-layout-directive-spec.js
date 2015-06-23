@@ -38,7 +38,7 @@ describe('Directive: vertical-fill-layout', function () {
   }));
 
 
-  it('should set the body height to fit in between the header and footer.', inject(function ($rootScope, $compile, $document) {
+  it('should set the body height to fit in between the header and footer.', inject(function ($rootScope, $compile, $document, $timeout) {
     // make sure the body has at least 100px height
     var jqlBody = $document.find('body');
     var body = jqlBody[0];
@@ -99,6 +99,7 @@ describe('Directive: vertical-fill-layout', function () {
     // digest the scope
     scope.$digest();
     scope.$apply();
+    $timeout.flush();
 
     // verify that the directives called the controller functions
     expect(mockMultiTranscludeCtrl.transcludePostLinkComplete.callCount).toBe(2);
@@ -116,7 +117,7 @@ describe('Directive: vertical-fill-layout', function () {
     expect(domVflBodyContainer.style.height).toBe('70px');
   }));
 
-  it('should allow a missing footer.', inject(function ($rootScope, $compile, $document) {
+  it('should allow a missing footer.', inject(function ($rootScope, $compile, $document, $timeout) {
     // make sure the body has at least 100px height
     var jqlBody = $document.find('body');
     var body = jqlBody[0];
@@ -174,6 +175,7 @@ describe('Directive: vertical-fill-layout', function () {
     // digest the scope
     scope.$digest();
     scope.$apply();
+    $timeout.flush();
 
     // verify that the directives called the controller functions
     expect(mockMultiTranscludeCtrl.transcludePostLinkComplete.callCount).toBe(1);
@@ -193,7 +195,7 @@ describe('Directive: vertical-fill-layout', function () {
   }));
 
 
-  it('should support nested vfl\'s under the same multi-transclude controller.', inject(function ($rootScope, $compile, $document) {
+  it('should support nested vfl\'s under the same multi-transclude controller.', inject(function ($rootScope, $compile, $document, $timeout) {
     // make sure the body has at least 100px height
     var jqlBody = $document.find('body');
     var body = jqlBody[0];
@@ -269,6 +271,7 @@ describe('Directive: vertical-fill-layout', function () {
     // digest the scope
     scope.$digest();
     scope.$apply();
+    $timeout.flush();
 
     // verify that the directives called the controller functions
     expect(mockMultiTranscludeCtrl.transcludePostLinkComplete.callCount).toBe(4);
